@@ -1,6 +1,5 @@
 package trello.repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,32 +42,21 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public void deleteColumn(Long columnId) {
+    public void deleteColumn(Long boardId, Long columnId) {
+        Board board = findBoardById(boardId).get();
         Column column = findColumnById(columnId).get();
-        // boards.get(column.getBoardId()).removeColumn(column);
-        columns.remove(column.getId());
+        board.removeColumn(column);
+        columns.remove(columnId);
     }
 
     @Override
     public List<Column> findAllColumns(Long boardId) {
-        List<Column> columnsList = new ArrayList<>(columns.values());
-        return columnsList;
+        return boards.get(boardId).getColumns();
     }
 
     @Override
     public Optional<Column> findColumnById(Long columnId) {
         return Optional.ofNullable(columns.get(columnId));
-    }
-
-    @Override
-    public void moveColumn(Long columnId, int newPosition) {
-        Column column = columns.get(columnId);
-        // boards.get(column.getBoardId()).moveColumn(column, newPosition);
-    }
-
-    @Override
-    public void renameColumn(Long columnId, String newTitle) {
-        columns.get(columnId).setTitle(newTitle);
     }
 
 }

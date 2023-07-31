@@ -2,6 +2,7 @@ package trello.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Board {
     private Long id;
@@ -85,9 +86,13 @@ public class Board {
         this.columns.remove(column);
     }
 
-    public void moveColumn(Column column, int newPosition) {
-        int currentPosition = columns.indexOf(column);
-        columns.add(newPosition, column);
+    public void moveColumn(Long columnId, int newPosition) {
+        int currentPosition = IntStream.range(0, columns.size())
+                .filter(index -> columns.get(index).getId().equals(columnId))
+                .findFirst().orElse(-1);
+        if (currentPosition == -1)
+            return;
+        columns.add(newPosition, columns.get(currentPosition));
         // if new position is less than current position
         // then the element is pushed one index ahead
         if (newPosition <= currentPosition) {

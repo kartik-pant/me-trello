@@ -17,9 +17,5 @@ public interface BoardRepository {
 
     Optional<Column> findColumnById(Long columnId);
 
-    void renameColumn(Long columnId, String newTitle);
-
-    void moveColumn(Long columnId, int newPosition);
-
-    void deleteColumn(Long columnId);
+    void deleteColumn(Long boardId, Long columnId);
 }
