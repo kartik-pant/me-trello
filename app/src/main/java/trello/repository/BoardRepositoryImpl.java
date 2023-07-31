@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import trello.models.Board;
 import trello.models.Column;
+import trello.models.User;
 
 public class BoardRepositoryImpl implements BoardRepository {
     private static Map<Long, Board> boards = new HashMap<>();
@@ -57,6 +58,12 @@ public class BoardRepositoryImpl implements BoardRepository {
     @Override
     public Optional<Column> findColumnById(Long columnId) {
         return Optional.ofNullable(columns.get(columnId));
+    }
+
+    @Override
+    public List<User> getBoardMembers(Long boardId) {
+        Board board = boards.get(boardId);
+        return board.getMembers();
     }
 
 }

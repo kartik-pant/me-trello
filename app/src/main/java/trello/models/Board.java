@@ -8,7 +8,7 @@ public class Board {
     private Long id;
     private String title;
     private String description;
-    private boolean isPrivate;
+    private BoardVisbility visibility;
     private User owner;
     private List<Column> columns;
     private List<User> members;
@@ -16,10 +16,10 @@ public class Board {
     public Board() {
     }
 
-    public Board(String title, String description, boolean isPrivate, User owner) {
+    public Board(String title, String description, BoardVisbility visibility, User owner) {
         this.title = title;
         this.description = description;
-        this.isPrivate = isPrivate;
+        this.visibility = visibility;
         this.owner = owner;
         this.columns = new ArrayList<>();
         this.members = new ArrayList<>();
@@ -35,7 +35,7 @@ public class Board {
         this.owner = board.owner;
         this.members = board.members;
         this.columns = board.columns;
-        this.isPrivate = board.isPrivate;
+        this.visibility = board.visibility;
     }
 
     public Long getId() {
@@ -50,8 +50,8 @@ public class Board {
         return description;
     }
 
-    public boolean isPrivate() {
-        return isPrivate;
+    public BoardVisbility getVisbility() {
+        return visibility;
     }
 
     public User getOwner() {
@@ -74,8 +74,8 @@ public class Board {
         this.description = description;
     }
 
-    public void setPrivate(boolean isPrivate) {
-        this.isPrivate = isPrivate;
+    public void setVisibilty(BoardVisbility visibility) {
+        this.visibility = visibility;
     }
 
     public void addNewColumn(Column column) {

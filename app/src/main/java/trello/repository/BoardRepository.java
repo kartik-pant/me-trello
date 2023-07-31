@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import trello.models.Board;
 import trello.models.Column;
+import trello.models.User;
 
 public interface BoardRepository {
     Board save(Board board);
@@ -18,4 +19,6 @@ public interface BoardRepository {
     Optional<Column> findColumnById(Long columnId);
 
     void deleteColumn(Long boardId, Long columnId);
+
+    List<User> getBoardMembers(Long boardId);
 }
