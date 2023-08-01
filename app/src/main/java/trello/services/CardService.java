@@ -9,19 +9,22 @@ import trello.models.Comment;
 import trello.models.Label;
 import trello.models.User;
 import trello.repository.BoardRepository;
-import trello.repository.BoardRepositoryImpl;
 import trello.repository.CardRepository;
-import trello.repository.CardRepositoryImpl;
 import trello.repository.UserRepository;
-import trello.repository.UserRepositoryImpl;
 import trello.utils.AuthHelpers;
 
 public class CardService {
 
-    CardRepository cardRepo = new CardRepositoryImpl();
-    BoardRepository boardRepo = new BoardRepositoryImpl();
-    UserRepository userRepo = new UserRepositoryImpl();
+    CardRepository cardRepo;
+    BoardRepository boardRepo;
+    UserRepository userRepo;
     AuthHelpers authHelpers = new AuthHelpers();
+
+    public CardService(CardRepository cardRepo, BoardRepository boardRepo, UserRepository userRepo) {
+        this.cardRepo = cardRepo;
+        this.boardRepo = boardRepo;
+        this.userRepo = userRepo;
+    }
 
     public Card createCard(Long boardId, Long userId, Long columnId, String title, String description) {
         if (!authHelpers.isUserBoardMember(boardId, userId))

@@ -4,10 +4,13 @@ import java.util.Optional;
 
 import trello.models.User;
 import trello.repository.UserRepository;
-import trello.repository.UserRepositoryImpl;
 
 public class UserService {
-    UserRepository userRepo = new UserRepositoryImpl();
+    UserRepository userRepo;
+
+    public UserService(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
     public User registerUser(String username, String email, String password) {
         User user = new User(username, email, password);

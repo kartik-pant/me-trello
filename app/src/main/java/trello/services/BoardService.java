@@ -7,15 +7,18 @@ import trello.models.BoardVisbility;
 import trello.models.Column;
 import trello.models.User;
 import trello.repository.BoardRepository;
-import trello.repository.BoardRepositoryImpl;
 import trello.repository.UserRepository;
-import trello.repository.UserRepositoryImpl;
 import trello.utils.AuthHelpers;
 
 public class BoardService {
-    BoardRepository boardRepo = new BoardRepositoryImpl();
-    UserRepository userRepo = new UserRepositoryImpl();
+    BoardRepository boardRepo;
+    UserRepository userRepo;
     AuthHelpers authHelpers = new AuthHelpers();
+
+    public BoardService(BoardRepository boardRepo, UserRepository userRepo) {
+        this.boardRepo = boardRepo;
+        this.userRepo = userRepo;
+    }
 
     public Board createBoard(Long ownerId, String title, String description, BoardVisbility visbility) {
         Optional<User> user = userRepo.findById(ownerId);
