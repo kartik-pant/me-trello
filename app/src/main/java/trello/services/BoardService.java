@@ -1,6 +1,5 @@
 package trello.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import trello.models.Board;
@@ -9,13 +8,17 @@ import trello.models.Column;
 import trello.models.User;
 import trello.repository.BoardRepository;
 import trello.repository.BoardRepositoryImpl;
+import trello.repository.UserRepository;
+import trello.repository.UserRepositoryImpl;
+import trello.utils.AuthHelpers;
 
 public class BoardService {
     BoardRepository boardRepo = new BoardRepositoryImpl();
-    UserService userService = new UserService();
+    UserRepository userRepo = new UserRepositoryImpl();
+    AuthHelpers authHelpers = new AuthHelpers();
 
     public Board createBoard(Long ownerId, String title, String description, BoardVisbility visbility) {
-        Optional<User> user = userService.findUserById(ownerId);
+        Optional<User> user = userRepo.findById(ownerId);
         if (!user.isPresent())
             throw new RuntimeException("Requeted user does not exist");
 
@@ -24,7 +27,7 @@ public class BoardService {
     }
 
     Board getBoard(Long userId, Long boardId) {
-        if (!isUserBoardMember(userId, boardId))
+        if (!authHelpers.isUserBoardMember(boardId, userId))
             throw new RuntimeException("Non board members cannot view board content");
         Optional<Board> board = boardRepo.findBoardById(boardId);
         return board.get();
@@ -37,13 +40,13 @@ public class BoardService {
      * @return newly created column.
      */
     public Column createColumn(Long createdBy, Long boardId, String title) {
-        if (!isUserBoardMember(createdBy, boardId))
+        if (!authHelpers.isUserBoardMember(boardId, createdBy))
             throw new RuntimeException("Non board members cannot add new columns.");
         return boardRepo.addColumn(boardId, new Column(title));
     }
 
     public void moveColumn(Long userId, Long boardId, Long columnId, int newPosition) {
-        if (!isUserBoardMember(userId, boardId))
+        if (!authHelpers.isUserBoardMember(boardId, userId))
             throw new RuntimeException("Non board members cannot add move columns.");
         Optional<Board> board = boardRepo.findBoardById(boardId);
         if (!board.isPresent())
@@ -52,7 +55,7 @@ public class BoardService {
     }
 
     public void renameColumn(Long userId, Long boardId, Long columnId, String newTitle) {
-        if (!isUserBoardMember(userId, boardId))
+        if (!authHelpers.isUserBoardMember(boardId, userId))
             throw new RuntimeException("Non board members cannot add move columns.");
         Optional<Column> column = boardRepo.findColumnById(columnId);
         if (!column.isPresent())
@@ -61,7 +64,7 @@ public class BoardService {
     }
 
     public void deleteColumn(Long userId, Long boardId, Long columnId) {
-        if (!isUserBoardMember(userId, boardId))
+        if (!authHelpers.isUserBoardMember(boardId, userId))
             throw new RuntimeException("Non board members cannot add move columns.");
         boardRepo.deleteColumn(boardId, columnId);
     }
@@ -71,14 +74,6 @@ public class BoardService {
         if (!board.isPresent())
             throw new RuntimeException("Requested board does not exist");
         board.get().addNewMember(user);
-    }
-
-    public boolean isUserBoardMember(Long userId, Long boardId) {
-        List<User> boardMembers = boardRepo.getBoardMembers(boardId);
-        Optional<User> user = userService.findUserById(userId);
-        if (!user.isPresent())
-            return false;
-        return boardMembers.contains(user.get());
     }
 
 }

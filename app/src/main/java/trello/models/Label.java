@@ -8,10 +8,15 @@ public class Label {
     public Label() {
     }
 
-    public Label(Long id, String name, String color) {
-        this.id = id;
+    public Label(String name, String color) {
         this.name = name;
         this.color = color;
+    }
+
+    public Label(Long id, Label label) {
+        this.id = id;
+        this.name = label.name;
+        this.color = label.color;
     }
 
     public Long getId() {
